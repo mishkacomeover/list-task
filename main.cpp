@@ -44,6 +44,8 @@ int main(){
         else break;
     }
 
+    cout << "proverka" << endl;
+
 
     return 0;
 }
