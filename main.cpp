@@ -44,8 +44,13 @@ int main(){
         else break;
     }
 
-    cout << "proverka" << endl;
-
-
+    cout << "nigger" << endl;
+    cout << "nigger" << endl;
+    cout << "nigger" << endl;
+    cout << "nigger" << endl;
+    cout << "nigger" << endl;
+    cout << "nigger" << endl;
+    cout << "nigger" << endl;
+    
     return 0;
 }
