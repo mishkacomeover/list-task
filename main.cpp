@@ -28,8 +28,86 @@ void add (int id, int value) {
 
 void insert_after (int target_id, int id, int value) {
     auto target = registery[target_id];
-    task* newTask = new task{id, value, target, target->next};
+    if (!target) {
+       cout << "target не существует" << endl;
+       exit(0);
+    }
+    task* newTask = new task{id,value,nullptr,target -> next};
+    target -> next = newTask;
+    if (newTask -> next) {
+        newTask -> next -> prev = newTask;
+    }
+
+    else {
+        tail = newTask;
+    }
+
+    registery[id] = newTask;
+}
+
+void move_to_front (int id) {
+    task* task = registery[id];
+    if (!task || task == head) return;
+    if (task -> prev) task -> prev -> next = task -> next;
+    if (task -> next) task -> next -> prev = task -> prev;
+
+    if (task == tail) tail = task -> prev;
+
+    task -> prev = nullptr;
+    task -> next = head;
+
+    if (head) head -> prev = task; // по идее можно и без проверки, но пусть лучше будет
+
+    head = task;
+}
+
+void splice_range (int id_from, int id_to) {
+
+    task* task_start = registery[id_from];
+    task* task_end = registery[id_to];
+
+    if (!task_start || !task_end || id_from > id_to) return;
+
+    if (task_start == task_end) {
+        move_to_front(id_from);
+        return;
+    }
+
     
+
+    if (task_start -> prev) task_start -> prev -> next = task_end -> next;
+    if (task_end -> next) task_end -> next -> prev = task_start -> prev;
+
+    if (task_end == tail) tail = task_end -> prev;
+
+    task_start -> prev = nullptr;
+    task_end -> next = head;
+
+    if (head) head -> prev = task_start;
+
+    head = task_start;
+}
+
+void get_value (int id) {
+    if (registery[id]) cout << "Значение:" << registery[id] -> value;
+    else {
+        cout << "Задачи не существует" << endl;
+        return;
+    }
+}
+
+void remove (int id) {
+    task* task = registery[id];
+    if (!task) return;
+
+    if (task -> prev) task -> prev -> next = task -> next;
+    if (task -> next) task -> next -> prev = task -> prev;
+
+    if (task == head) head = task -> next;
+    if (task == tail) tail = task -> prev;
+
+    registery.erase(id);
+    delete task;
 }
 
 int main(){
@@ -43,14 +121,6 @@ int main(){
         }
         else break;
     }
-
-    cout << "nigger" << endl;
-    cout << "nigger" << endl;
-    cout << "nigger" << endl;
-    cout << "nigger" << endl;
-    cout << "nigger" << endl;
-    cout << "nigger" << endl;
-    cout << "nigger" << endl;
     
     return 0;
 }
