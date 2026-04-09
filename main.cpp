@@ -16,26 +16,29 @@ task* tail = nullptr;
 
 map <int, task*> registery;
 
-void add (int id, int value) {
-    task* newTask = new task{id, value, tail, nullptr};
-    if (tail) tail -> next = newTask;
-    else  {
+void add(int id, int value) {
+    task* newTask = new task{ id, value, tail, nullptr };
+    if (tail) {
+        tail->next = newTask;
+        tail = newTask;
+    }
+    else {
         head = newTask;
         tail = newTask;
     }
     registery[id] = newTask;
 }
 
-void insert_after (int target_id, int id, int value) {
+void insert_after(int target_id, int id, int value) {
     auto target = registery[target_id];
     if (!target) {
-       cout << "target не существует" << endl;
-       exit(0);
+        cout << "target не существует" << endl;
+        exit(0);
     }
-    task* newTask = new task{id,value,nullptr,target -> next};
-    target -> next = newTask;
-    if (newTask -> next) {
-        newTask -> next -> prev = newTask;
+    task* newTask = new task{ id,value,nullptr,target->next };
+    target->next = newTask;
+    if (newTask->next) {
+        newTask->next->prev = newTask;
     }
 
     else {
@@ -45,23 +48,23 @@ void insert_after (int target_id, int id, int value) {
     registery[id] = newTask;
 }
 
-void move_to_front (int id) {
+void move_to_front(int id) {
     task* task = registery[id];
     if (!task || task == head) return;
-    if (task -> prev) task -> prev -> next = task -> next;
-    if (task -> next) task -> next -> prev = task -> prev;
+    if (task->prev) task->prev->next = task->next;
+    if (task->next) task->next->prev = task->prev;
 
-    if (task == tail) tail = task -> prev;
+    if (task == tail) tail = task->prev;
 
-    task -> prev = nullptr;
-    task -> next = head;
+    task->prev = nullptr;
+    task->next = head;
 
-    if (head) head -> prev = task; // по идее можно и без проверки, но пусть лучше будет
+    if (head) head->prev = task; // по идее можно и без проверки, но пусть лучше будет
 
     head = task;
 }
 
-void splice_range (int id_from, int id_to) {
+void splice_range(int id_from, int id_to) {
 
     task* task_start = registery[id_from];
     task* task_end = registery[id_to];
@@ -73,44 +76,45 @@ void splice_range (int id_from, int id_to) {
         return;
     }
 
-    
 
-    if (task_start -> prev) task_start -> prev -> next = task_end -> next;
-    if (task_end -> next) task_end -> next -> prev = task_start -> prev;
 
-    if (task_end == tail) tail = task_end -> prev;
+    if (task_start->prev) task_start->prev->next = task_end->next;
+    if (task_end->next) task_end->next->prev = task_start->prev;
 
-    task_start -> prev = nullptr;
-    task_end -> next = head;
+    if (task_end == tail) tail = task_end->prev;
 
-    if (head) head -> prev = task_start;
+    task_start->prev = nullptr;
+    task_end->next = head;
+
+    if (head) head->prev = task_start;
 
     head = task_start;
 }
 
-void get_value (int id) {
-    if (registery[id]) cout << "Значение:" << registery[id] -> value << endl;
+void get_value(int id) {
+    if (registery[id]) cout << "Значение:" << registery[id]->value << endl;
     else {
         cout << "Задачи не существует" << endl;
         return;
     }
 }
 
-void remove (int id) {
+void remove(int id) {
     task* task = registery[id];
     if (!task) return;
 
-    if (task -> prev) task -> prev -> next = task -> next;
-    if (task -> next) task -> next -> prev = task -> prev;
+    if (task->prev) task->prev->next = task->next;
+    if (task->next) task->next->prev = task->prev;
 
-    if (task == head) head = task -> next;
-    if (task == tail) tail = task -> prev;
+    if (task == head) head = task->next;
+    if (task == tail) tail = task->prev;
 
     registery.erase(id);
     delete task;
 }
 
-int main(){
+int main() {
+    setlocale(LC_ALL, "Russian");
     int n;
     cout << "Введите количество операций (от 1 до 100000)" << endl;
     while (true) {
@@ -122,22 +126,23 @@ int main(){
 
         else {
             for (int i = 0; i <= n; i++) {
-                add(i, i*10);
-                cout << "Added id:" << i << " value:" << i*10 << endl;
+                add(i, i * 10);
+                cout << "Added id:" << i << " value:" << i * 10 << endl;
             }
             break;
         }
     }
 
     cout << "Выберите следующее действие:" << endl
-         << "1 - add <id> <value> " << endl
-         << "2 - insert_after <target_id> <new_id> <value>" << endl
-         << "3 - move_to_front <id>" << endl
-         << "4 - splice_range <id_from> <id_to>" << endl
-         << "5 - get_value <id>" << endl
-         << "6 - remove <id>" << endl
-         << "7 - выход из программы" << endl;
-    
+        << "1 - addё <id> <value> " << endl
+        << "2 - insert_after <target_id> <new_id> <value>" << endl
+        << "3 - move_to_front <id>" << endl
+        << "4 - splice_range <id_from> <id_to>" << endl
+        << "5 - get_value <id>" << endl
+        << "6 - remove <id>" << endl
+        << "7 - список задач (в порядке их выполнения)" << endl
+        << "8 - выход из программы" << endl;
+
     int choose = 0;
     while (true) {
         cin >> choose;
@@ -150,7 +155,7 @@ int main(){
             cin >> value;
 
             if (!registery[id]) {
-                add(id,value);
+                add(id, value);
                 cout << "Задача с id = " << id << " и value = " << value << " успешно добавлена!" << endl;
             }
 
@@ -167,7 +172,7 @@ int main(){
             cout << "Введите <value>: ";
             cin >> value;
 
-            insert_after(target_id,new_id,value);
+            insert_after(target_id, new_id, value);
             break;
         }
 
@@ -187,7 +192,7 @@ int main(){
             cout << "Введите <id_to>: ";
             cin >> id_to;
 
-            splice_range(id_from,id_to);
+            splice_range(id_from, id_to);
             break;
         }
 
@@ -207,15 +212,21 @@ int main(){
             break;
         }
 
-        case 7:
+        case 7: {
+            cout << "=== СПИСОК (порядок выполнения) ===" << endl;
+            task* cur = head;
+            while (cur) {
+                cout << "id=" << cur->id << " val=" << cur->value;
+                if (cur->next) cout << " -> ";
+                cur = cur->next;
+            }
+            cout << endl;
+            break;
+        }
+
+        case 8:
             cout << "Программа завершена" << endl;
             break;
-
-        case 8: {
-            for (map x : registery) {
-                
-            }
-        }
 
         default:
             cout << "Неверный ввод" << endl;
