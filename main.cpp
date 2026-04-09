@@ -89,7 +89,7 @@ void splice_range (int id_from, int id_to) {
 }
 
 void get_value (int id) {
-    if (registery[id]) cout << "Значение:" << registery[id] -> value;
+    if (registery[id]) cout << "Значение:" << registery[id] -> value << endl;
     else {
         cout << "Задачи не существует" << endl;
         return;
@@ -112,15 +112,115 @@ void remove (int id) {
 
 int main(){
     int n;
-    cout << "Введите количество операций (от 0 до 100001)" << endl;
+    cout << "Введите количество операций (от 1 до 100000)" << endl;
     while (true) {
         cin >> n;
         if (n <= 0 || n > 100000) {
-            cout << "Еблан блять по русски написано от 0 до 100001" << endl;
+            cout << "Еблан блять по русски написано от 1 до 100000" << endl;
             n = 0;
         }
-        else break;
+
+        else {
+            for (int i = 0; i <= n; i++) {
+                add(i, i*10);
+                cout << "Added id:" << i << " value:" << i*10 << endl;
+            }
+            break;
+        }
     }
+
+    cout << "Выберите следующее действие:" << endl
+         << "1 - add <id> <value> " << endl
+         << "2 - insert_after <target_id> <new_id> <value>" << endl
+         << "3 - move_to_front <id>" << endl
+         << "4 - splice_range <id_from> <id_to>" << endl
+         << "5 - get_value <id>" << endl
+         << "6 - remove <id>" << endl
+         << "7 - выход из программы" << endl;
     
+    int choose = 0;
+    while (true) {
+        cin >> choose;
+        switch (choose) {
+        case 1: {
+            int id, value = 0;
+            cout << "Введите <id>: ";
+            cin >> id;
+            cout << "Введите <value>: ";
+            cin >> value;
+
+            if (!registery[id]) {
+                add(id,value);
+                cout << "Задача с id = " << id << " и value = " << value << " успешно добавлена!" << endl;
+            }
+
+            else cout << "Задача с таким id уже существует!" << endl;
+            break;
+        }
+
+        case 2: {
+            int target_id, new_id, value = 0;
+            cout << "Введите <target_id>: ";
+            cin >> target_id;
+            cout << "Введите <new_id>: ";
+            cin >> new_id;
+            cout << "Введите <value>: ";
+            cin >> value;
+
+            insert_after(target_id,new_id,value);
+            break;
+        }
+
+        case 3: {
+            int id = 0;
+            cout << "Введите <id>: ";
+            cin >> id;
+
+            move_to_front(id);
+            break;
+        }
+
+        case 4: {
+            int id_from, id_to = 0;
+            cout << "Введите <id_from>: ";
+            cin >> id_from;
+            cout << "Введите <id_to>: ";
+            cin >> id_to;
+
+            splice_range(id_from,id_to);
+            break;
+        }
+
+        case 5: {
+            int id = 0;
+            cout << "Введите <id>: ";
+            cin >> id;
+            get_value(id);
+            break;
+        }
+
+        case 6: {
+            int id = 0;
+            cout << "Введите <id>: ";
+            cin >> id;
+            remove(id);
+            break;
+        }
+
+        case 7:
+            cout << "Программа завершена" << endl;
+            break;
+
+        case 8: {
+            for (map x : registery) {
+                
+            }
+        }
+
+        default:
+            cout << "Неверный ввод" << endl;
+            break;
+        }
+    }
     return 0;
 }
